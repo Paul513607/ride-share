@@ -6,7 +6,6 @@ CREATE TABLE station(
     total_bike_capacity int,
     bikes_stationed int,
     optimal_bike_count int,
-    is_depo NUMBER(1),
     total_cars int,
     cars_stationed int,
     PRIMARY KEY(id)
@@ -24,10 +23,9 @@ BEGIN
 END;
 /
 
-/**
 DROP TABLE station;
 DROP SEQUENCE station_seq;
-**/
+DROP TRIGGER station_inc;
 
 CREATE TABLE route(
     id NUMBER PRIMARY KEY,
@@ -50,15 +48,13 @@ BEGIN
 END;
 /
 
-/**
 DROP TABLE route;
 DROP SEQUENCE route_seq;
-**/
+DROP TRIGGER route_inc;
 
 
 CREATE TABLE car(
     id NUMBER PRIMARY KEY,
-    is_stationed NUMBER(1),
     total_capacity int,
     current_load int,
     current_route NUMBER,
@@ -77,14 +73,13 @@ BEGIN
 END;
 /
 
-/**
 DROP TABLE car;
 DROP SEQUENCE car_seq;
-**/
+DROP TRIGGER car_inc;
+
 
 CREATE TABLE bike(
     id NUMBER PRIMARY KEY,
-    is_stationed NUMBER(1),
     in_maintenance NUMBER(1),
     station_id NUMBER,
     route_id NUMBER,
@@ -105,7 +100,6 @@ BEGIN
 END;
 /
 
-/**
 DROP TABLE bike;
 DROP SEQUENCE bike_seq;
-**/
+DROP TRIGGER bike_inc;

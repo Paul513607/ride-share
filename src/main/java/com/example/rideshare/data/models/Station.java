@@ -31,9 +31,6 @@ public class Station {
     @Column(name = "OPTIMAL_BIKE_COUNT")
     private Long optimalBikeCount;
 
-    @Column(name = "IS_DEPO")
-    private Boolean isDepo;
-
     @Column(name = "TOTAL_CARS")
     private Long totalCars;
 
@@ -94,14 +91,6 @@ public class Station {
 
     public void setOptimalBikeCount(Long optimalBikeCount) {
         this.optimalBikeCount = optimalBikeCount;
-    }
-
-    public Boolean getIsDepo() {
-        return isDepo;
-    }
-
-    public void setIsDepo(Boolean isDepo) {
-        this.isDepo = isDepo;
     }
 
     public Long getTotalCars() {

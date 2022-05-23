@@ -1,8 +1,5 @@
 package com.example.rideshare.data.models;
 
-import com.example.rideshare.data.models.Route;
-import com.example.rideshare.data.models.Station;
-
 import javax.persistence.*;
 
 @Entity
@@ -11,9 +8,6 @@ public class Bike {
     @Id
     @Column(name = "ID", nullable = false)
     private Long id;
-
-    @Column(name = "IS_STATIONED")
-    private Boolean isStationed;
 
     @Column(name = "IN_MAINTENANCE")
     private Boolean inMaintenance;
@@ -35,14 +29,6 @@ public class Bike {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Boolean getIsStationed() {
-        return isStationed;
-    }
-
-    public void setIsStationed(Boolean isStationed) {
-        this.isStationed = isStationed;
     }
 
     public Boolean getInMaintenance() {
