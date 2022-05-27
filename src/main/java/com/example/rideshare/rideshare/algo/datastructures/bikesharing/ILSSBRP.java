@@ -1,6 +1,8 @@
 package com.example.rideshare.rideshare.algo.datastructures.bikesharing;
 
 import com.example.rideshare.rideshare.algo.datastructures.graph.Graph;
+import com.example.rideshare.rideshare.algo.datastructures.model.Copyable;
+import com.example.rideshare.rideshare.algo.datastructures.model.Station;
 
 import java.util.List;
 
@@ -8,6 +10,7 @@ public class ILSSBRP implements SBRP{
     private List<PerturbationFunc> perturbationFuncs;
     private SolutionGenerator initialSolutionGenerator;
     private FitnessFunction fitnessFunction;
+    private Graph<?> graph;
     private int algorithmIterations;
     private int localIterations;
 
@@ -20,12 +23,13 @@ public class ILSSBRP implements SBRP{
         this.localIterations = repetitions;
     }
     @Override
-    public SBRPSolution getRepositioningPath(Graph graph) {
+    public<T extends Copyable<T>> SBRPSolution getRepositioningPath(Graph<T> graph) {
+        this.graph  = graph;
         int iteration = 0;
         SBRPSolution bestSolution = null;
         while(iteration < algorithmIterations){
             int repeat = 0;
-            SBRPSolution iterationSolution = generateInitialSolution();
+            SBRPSolution iterationSolution = initialSolutionGenerator.getSolution();
             SBRPSolution newSolution = new SBRPSolution(iterationSolution);
             while(repeat < localIterations){
                 if(!isFeasible(newSolution)){
@@ -34,7 +38,7 @@ public class ILSSBRP implements SBRP{
 
                 newSolution = neighbouringSolution(newSolution);
 
-                if(fitnessFunction.fitness(newSolution) < fitnessFunction.fitness(iterationSolution)){
+                if(fitnessFunction.fitness(newSolution, graph) < fitnessFunction.fitness(iterationSolution, graph)){
                     iterationSolution = newSolution;
                     repeat = 0;
                 }
@@ -43,17 +47,13 @@ public class ILSSBRP implements SBRP{
             }
 
             if(bestSolution == null
-                    || fitnessFunction.fitness(iterationSolution) < fitnessFunction.fitness(bestSolution)){
+                    || fitnessFunction.fitness(iterationSolution, graph) < fitnessFunction.fitness(bestSolution, graph)){
                 bestSolution = iterationSolution;
             }
             ++iteration;
         }
 
         return bestSolution;
-    }
-
-    private SBRPSolution generateInitialSolution(){
-        return null;
     }
 
     private boolean isFeasible(SBRPSolution solution){

@@ -8,9 +8,9 @@ import com.example.rideshare.rideshare.algo.datastructures.graph.flow.Subgraph;
 
 import java.util.List;
 
-public class FordFulkerson implements NetworkFlow {
-    public MaxFlow getMaximumFlow(Graph graph, int source, int target) {
-        MaxFlow mf = new MaxFlow(graph);
+public class FordFulkerson<T> implements NetworkFlow<T> {
+    public MaxFlow<T> getMaximumFlow(Graph<T> graph, int source, int target) {
+        MaxFlow<T> mf = new MaxFlow<T>(graph);
         Subgraph sub;
 
         while ((sub = getAugmentingPath(graph, mf, new Subgraph(), source, target)) != null) {
@@ -22,7 +22,7 @@ public class FordFulkerson implements NetworkFlow {
         return mf;
     }
 
-    private double getMin(MaxFlow mf, List<Edge> path) {
+    private double getMin(MaxFlow<T> mf, List<Edge> path) {
         double min = mf.getResidual(path.get(0));
 
         for (int i = 1; i < path.size(); i++)
@@ -31,7 +31,7 @@ public class FordFulkerson implements NetworkFlow {
         return min;
     }
 
-    private Subgraph getAugmentingPath(Graph graph, MaxFlow mf, Subgraph sub, int source, int target) {
+    private Subgraph getAugmentingPath(Graph<T> graph, MaxFlow<T> mf, Subgraph sub, int source, int target) {
         if (source == target) return sub;
         Subgraph tmp;
 
@@ -47,7 +47,7 @@ public class FordFulkerson implements NetworkFlow {
         return null;
     }
 
-    protected void updateBackward(Graph graph, Subgraph sub, MaxFlow mf, double min) {
+    protected void updateBackward(Graph<T> graph, Subgraph sub, MaxFlow<T> mf, double min) {
         boolean found;
 
         for (Edge edge : sub.getEdges()) {

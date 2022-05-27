@@ -1,22 +1,34 @@
 package com.example.rideshare.rideshare.algo.datastructures.graph;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import com.example.rideshare.rideshare.algo.datastructures.model.Copyable;
+import com.example.rideshare.rideshare.algo.datastructures.model.Station;
+
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class Graph {
-    private final List<List<Edge>> incoming_edges;
+public class Graph<T extends Copyable<T>> {
+    private final List<List<Edge>> incomingEdges;
+    private final Map<Integer, T> verticesMap;
 
     public Graph(int size) {
-        incoming_edges = Stream.generate(ArrayList<Edge>::new).limit(size).collect(Collectors.toList());
+        incomingEdges = Stream.generate(ArrayList<Edge>::new).limit(size).collect(Collectors.toList());
+        verticesMap = new HashMap<>(size);
+
+        for (int i = 0; i < size; i++) {
+            verticesMap.put(i, null);
+        }
     }
 
-    public Graph(Graph g) {
-        incoming_edges = g.incoming_edges.stream().map(ArrayList::new).collect(Collectors.toList());
+    public Graph(Graph<T> g) {
+        incomingEdges = g.incomingEdges.stream().map(ArrayList::new).collect(Collectors.toList());
+        verticesMap = new HashMap<>(g.verticesMap.size());
+        g.getVerticesMap().forEach((key, value) -> verticesMap.put((int)key, value.copy()));
+    }
+
+    public Map<Integer, T> getVerticesMap() {
+        return verticesMap;
     }
 
     public boolean hasNoEdge() {
@@ -24,7 +36,7 @@ public class Graph {
     }
 
     public int size() {
-        return incoming_edges.size();
+        return incomingEdges.size();
     }
 
     public Edge setDirectedEdge(int source, int target, double weight) {
@@ -40,11 +52,15 @@ public class Graph {
     }
 
     public List<Edge> getIncomingEdges(int target) {
-        return incoming_edges.get(target);
+        return incomingEdges.get(target);
+    }
+
+    public Edge getEdge(int source, int target){
+        return incomingEdges.get(target).stream().filter(edge -> edge.getSource() == source).findAny().orElse(null);
     }
 
     public List<Edge> getAllEdges() {
-        return incoming_edges.stream().flatMap(List::stream).collect(Collectors.toList());
+        return incomingEdges.stream().flatMap(List::stream).collect(Collectors.toList());
     }
 
     public Deque<Integer> getVerticesWithNoIncomingEdges() {

@@ -31,6 +31,12 @@ public class SBRPSolution {
         vehicleLoads.add(vehicleLoad);
     }
 
+    public void addToFront(int routeStop, int vehicleOperation, int vehicleLoad){
+        routes.add(0, routeStop);
+        routes.add(0, vehicleOperation);
+        routes.add(0, vehicleLoad);
+    }
+
     public List<Integer> getRoutes() {
         return routes;
     }

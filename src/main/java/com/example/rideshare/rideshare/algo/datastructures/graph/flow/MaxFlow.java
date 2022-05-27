@@ -7,15 +7,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MaxFlow {
+public class MaxFlow<T> {
     private Map<Edge, Double> flow_map;
     private double maxflow;
 
-    public MaxFlow(Graph graph) {
+    public MaxFlow(Graph<T> graph) {
         init(graph);
     }
 
-    public void init(Graph graph) {
+    public void init(Graph<T> graph) {
         flow_map = new HashMap<>();
         maxflow = 0;
 
