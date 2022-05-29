@@ -11,7 +11,7 @@ public class GreedySBRPSolver {
     private Graph<AlgStation> graph;
     private Integer truckCapacity;
 
-    GreedySBRPSolver(Graph<AlgStation> graph, int truckCapacity){
+    public GreedySBRPSolver(Graph<AlgStation> graph, int truckCapacity){
         this.graph = graph;
         this.truckCapacity = truckCapacity;
     }
@@ -37,8 +37,10 @@ public class GreedySBRPSolver {
     public Solution getTruckRoute() {
         int currentCapacity = truckCapacity;
         AlgStation depot = graph.getVerticesMap().get(0);
-        long totalDemand = graph.getVerticesMap().entrySet().stream().skip(1)
-                .map(entry -> entry.getValue().getDemand()).reduce(0, Integer::sum);
+        long totalOptimalStationed = graph.getVerticesMap().entrySet().stream().skip(1)
+                .map(entry -> entry.getValue().getOptimalStationed()).reduce(0, Integer::sum);
+        long totalStationed = graph.getVerticesMap().entrySet().stream().skip(1)
+                .map(entry -> entry.getValue().getStationed()).reduce(0, Integer::sum);
 
         //if by summing the demands we get extra or not enough bikes to fulfill the requests there is no solution
 //        if((totalDemand > 0 && totalDemand > Math.min(depot.getBikesStationed(), truckCapacity)) ||
@@ -46,7 +48,7 @@ public class GreedySBRPSolver {
 //            return null;
 //        }
 
-        if(totalDemand != 0){
+        if(totalOptimalStationed != totalStationed){
             return null;
         }
 
@@ -54,11 +56,11 @@ public class GreedySBRPSolver {
         solution.addNewStation(0, 0, 0);
 
 
-        List<Integer> toVisitList = graph.getVerticesMap().entrySet().stream()
+        List<Integer> toVisitList = graph.getVerticesMap().entrySet().stream().skip(1)
                 .filter(entry -> entry.getValue().getDemand() != 0 || ThreadLocalRandom.current().nextBoolean())
                 .map(Map.Entry::getKey).toList();
 
-        Collections.shuffle(toVisitList);
+        //Collections.shuffle(toVisitList);
         Set<Integer> toVisitSet = new HashSet<>(toVisitList);
 
         var stations = graph.getVerticesMap();
@@ -67,7 +69,7 @@ public class GreedySBRPSolver {
             for (Integer station:
                     toVisitSet) {
                 int stationDemand = stations.get(station).getDemand();
-                if((stationDemand <= 0 && (-stationDemand) >= currentCapacity) ||
+                if((stationDemand <= 0 && (-stationDemand) <= currentCapacity) ||
                         (stationDemand > 0 && truckCapacity - currentCapacity >= stationDemand)){
                     inserted = true;
                     solution.addNewStation(station, stationDemand, truckCapacity - currentCapacity);
@@ -113,6 +115,7 @@ public class GreedySBRPSolver {
                 referredStation.setStationed(referredStation.getStationed() + vehicleAction);
             }
         }
+        solution.addNewStation(0, truckCapacity - currentCapacity, truckCapacity - currentCapacity);
 
         return solution;
     }
