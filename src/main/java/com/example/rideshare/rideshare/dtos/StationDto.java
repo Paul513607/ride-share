@@ -18,6 +18,5 @@ public class StationDto {
     private Long totalBikeCapacity;
     private Long bikesStationed;
     private Long optimalBikeCount;
-    private Long totalCars;
-    private Long carsStationed;
+    private boolean isDepo;
 }

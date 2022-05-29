@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "ROUTE")
+@Table(name = "ROUTES")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

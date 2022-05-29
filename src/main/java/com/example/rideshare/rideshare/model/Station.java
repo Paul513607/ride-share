@@ -11,7 +11,7 @@ import javax.persistence.Table;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "STATION")
+@Table(name = "STATIONS")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -38,9 +38,6 @@ public class Station {
     @Column(name = "OPTIMAL_BIKE_COUNT")
     private Long optimalBikeCount;
 
-    @Column(name = "TOTAL_CARS")
-    private Long totalCars;
-
-    @Column(name = "CARS_STATIONED")
-    private Long carsStationed;
+    @Column(name = "IS_DEPO")
+    private Boolean isDepo;
 }

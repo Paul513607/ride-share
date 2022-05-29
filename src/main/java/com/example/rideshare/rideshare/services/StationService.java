@@ -50,9 +50,6 @@ public class StationService {
         }
         stationDto.setId(id);
 
-        if (stationDto.getCarsStationed() != null) {
-            station.get().setCarsStationed(stationDto.getCarsStationed());
-        }
         if (stationDto.getBikesStationed() != null) {
             station.get().setBikesStationed(stationDto.getBikesStationed());
         }
@@ -67,9 +64,6 @@ public class StationService {
         }
         if (stationDto.getOptimalBikeCount() != null) {
             station.get().setOptimalBikeCount(stationDto.getOptimalBikeCount());
-        }
-        if (stationDto.getTotalCars() != null) {
-            station.get().setTotalCars(stationDto.getTotalCars());
         }
         if (stationDto.getTotalBikeCapacity() != null) {
             station.get().setTotalBikeCapacity(stationDto.getTotalBikeCapacity());
