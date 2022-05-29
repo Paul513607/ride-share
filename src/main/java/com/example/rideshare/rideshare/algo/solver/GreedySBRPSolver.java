@@ -66,8 +66,10 @@ public class GreedySBRPSolver {
         var stations = graph.getVerticesMap();
         while (toVisitSet.size() > 0){
             boolean inserted = false;
+            var lastVisitedStation = stations.get(solution.getRoutes().get(solution.getRoutes().size() - 1));
+            var sortedStations = sortByDistanceTo(lastVisitedStation, toVisitSet).stream().map(Tuple::getFirst).toList();
             for (Integer station:
-                    toVisitSet) {
+                    sortedStations) {
                 int stationDemand = stations.get(station).getDemand();
                 if((stationDemand <= 0 && (-stationDemand) <= currentCapacity) ||
                         (stationDemand > 0 && truckCapacity - currentCapacity >= stationDemand)){
@@ -85,7 +87,7 @@ public class GreedySBRPSolver {
                 int maxExchange = 0;
                 for (Integer station:
                         toVisitSet) {
-                    int stationDemand = graph.getVerticesMap().get(station).getDemand();
+                    int stationDemand = stations.get(station).getDemand();
                     int stationExchange;
                     if(stationDemand >= 0){
                         stationExchange = truckCapacity - currentCapacity;
@@ -97,10 +99,10 @@ public class GreedySBRPSolver {
                     if(stationExchange > maxExchange){
                         maxExchangeStation = station;
                         maxExchange = stationExchange;
-                        distanceFromPrevious = AlgStation.getDistance(graph.getVerticesMap().get(lastStationInSolution), graph.getVerticesMap().get(station));
+                        distanceFromPrevious = AlgStation.getDistance(stations.get(lastStationInSolution), graph.getVerticesMap().get(station));
                     }
                     else if(stationExchange == maxExchange){
-                        double currentDistanceFromPrevious = AlgStation.getDistance(graph.getVerticesMap().get(lastStationInSolution), graph.getVerticesMap().get(station));
+                        double currentDistanceFromPrevious = AlgStation.getDistance(stations.get(lastStationInSolution), stations.get(station));
                         if(distanceFromPrevious > currentDistanceFromPrevious){
                             maxExchangeStation = station;
                         }
@@ -118,5 +120,16 @@ public class GreedySBRPSolver {
         solution.addNewStation(0, truckCapacity - currentCapacity, truckCapacity - currentCapacity);
 
         return solution;
+    }
+
+    private List<Tuple<Integer, Double>> sortByDistanceTo(AlgStation startStation, Set<Integer> stations){
+        List<Tuple<Integer, Double>> stationDistances = new ArrayList<>();
+        for (var station:
+             stations) {
+            AlgStation endStation = graph.getVerticesMap().get(station);
+            double distance = AlgStation.getDistance(startStation, endStation);
+            stationDistances.add(new Tuple<>(station, distance));
+        }
+        return stationDistances.stream().sorted().toList();
     }
 }
