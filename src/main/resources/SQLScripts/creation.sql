@@ -1,4 +1,4 @@
-CREATE TABLE station(
+CREATE TABLE stations(
     id INT GENERATED ALWAYS AS IDENTITY,
     name VARCHAR(50) NOT NULL,
     coordinates_x DECIMAL(8,2),
@@ -10,9 +10,9 @@ CREATE TABLE station(
     PRIMARY KEY(id)
 );
 
-DROP TABLE station;
+DROP TABLE stations;
 
-CREATE TABLE route(
+CREATE TABLE routes(
     id INT GENERATED ALWAYS AS IDENTITY,
     station_src INT,
     station_dest INT,
@@ -23,9 +23,9 @@ CREATE TABLE route(
 );
 
 
-DROP TABLE route;
+DROP TABLE routes;
 
-CREATE TABLE car(
+CREATE TABLE cars(
     id INT GENERATED ALWAYS AS IDENTITY,
     total_capacity int,
     current_load int,
@@ -34,9 +34,9 @@ CREATE TABLE car(
     PRIMARY KEY(id)
 );
 
-DROP TABLE car;
+DROP TABLE cars;
 
-CREATE TABLE bike(
+CREATE TABLE bikes(
     id INT GENERATED ALWAYS AS IDENTITY,
     in_maintenance boolean,
     station_id INT,
@@ -47,4 +47,4 @@ CREATE TABLE bike(
     PRIMARY KEY(id)
 );
 
-drop table bike;
+drop table bikes;
