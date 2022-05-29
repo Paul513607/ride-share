@@ -39,6 +39,7 @@ public class StationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteStation(@PathVariable Long id) {
+        stationService.deleteStation(id);
         return new ResponseEntity<>(new HttpHeaders(), HttpStatus.RESET_CONTENT);
     }
 }
