@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RouteDto {
+    private Long id;
     private Station stationSrc;
     private Station stationDest;
     private Long length;

@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BikeDto {
+    private Long id;
     private Boolean inMaintenance;
     private Station station;
     private Route route;

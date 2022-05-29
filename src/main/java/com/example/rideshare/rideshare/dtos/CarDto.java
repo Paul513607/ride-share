@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CarDto {
+    private Long id;
     private Long totalCapacity;
     private Long currentLoad;
     private Route currentRoute;
