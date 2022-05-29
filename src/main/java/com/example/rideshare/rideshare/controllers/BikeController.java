@@ -14,9 +14,4 @@ public class BikeController {
     @Autowired
     private BikeService bikeService;
 
-    @GetMapping
-    public ResponseEntity<Integer> testP() {
-        return ResponseEntity.ok().body(bikeService.testP());
-    }
-
 }

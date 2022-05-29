@@ -7,6 +7,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BikeRepository extends JpaRepository<Bike, Long> {
-    @Procedure(procedureName = "TESTP")
-    int testP();
 }

@@ -10,8 +10,4 @@ public class BikeService {
     @Autowired
     private BikeRepository bikeRepo;
 
-    public int testP() {
-        return bikeRepo.testP();
-    }
-
 }
