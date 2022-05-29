@@ -5,10 +5,11 @@ import com.example.rideshare.rideshare.algo.datastructures.graph.Graph;
 import com.example.rideshare.rideshare.algo.datastructures.graph.flow.MaxFlow;
 import com.example.rideshare.rideshare.algo.datastructures.graph.flow.NetworkFlow;
 import com.example.rideshare.rideshare.algo.datastructures.graph.flow.Subgraph;
+import com.example.rideshare.rideshare.algo.datastructures.model.Copyable;
 
 import java.util.List;
 
-public class FordFulkerson<T> implements NetworkFlow<T> {
+public class FordFulkerson<T extends Copyable<T>> implements NetworkFlow<T> {
     public MaxFlow<T> getMaximumFlow(Graph<T> graph, int source, int target) {
         MaxFlow<T> mf = new MaxFlow<T>(graph);
         Subgraph sub;

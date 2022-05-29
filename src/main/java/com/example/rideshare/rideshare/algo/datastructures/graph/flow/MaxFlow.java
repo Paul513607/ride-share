@@ -2,12 +2,13 @@ package com.example.rideshare.rideshare.algo.datastructures.graph.flow;
 
 import com.example.rideshare.rideshare.algo.datastructures.graph.Edge;
 import com.example.rideshare.rideshare.algo.datastructures.graph.Graph;
+import com.example.rideshare.rideshare.algo.datastructures.model.Copyable;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MaxFlow<T> {
+public class MaxFlow<T extends Copyable<T>> {
     private Map<Edge, Double> flow_map;
     private double maxflow;
 
@@ -25,6 +26,10 @@ public class MaxFlow<T> {
 
     public double getMaxFlow() {
         return maxflow;
+    }
+
+    public Map<Edge, Double> getFlow_map() {
+        return flow_map;
     }
 
     public double getResidual(Edge edge) {
