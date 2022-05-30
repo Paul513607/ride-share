@@ -160,8 +160,8 @@ BEGIN
         is_depo)
         VALUES(
         'DEPOT',
-        random_between(1, 999),
-        random_between(1, 999),
+        random_between(200, 1400),
+        random_between(166, 834),
         0,
         0,
         0,
@@ -193,8 +193,8 @@ BEGIN
 		is_depo)
         VALUES(
         v_station_name,
-        random_between(1, 999),
-        random_between(1, 999),
+        random_between(200, 1400),
+        random_between(166, 834),
         v_bike_capacity,
         0,
         v_optimal_bike_count,
@@ -223,8 +223,8 @@ BEGIN
 		is_depo)
         VALUES(
         v_station_name,
-        random_between(1, 999),
-        random_between(1, 999),
+        random_between(200, 1400),
+        random_between(166, 834),
         v_bike_capacity,
         0,
         v_optimal_bike_count,
@@ -233,10 +233,12 @@ BEGIN
 		commit;
 END$$;
 
+/**
 do $$
 BEGIN
 	call init_tables();
 end$$;
+**/
 
 /**
 select * from stations;
