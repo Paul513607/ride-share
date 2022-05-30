@@ -22,10 +22,7 @@ import lombok.*;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
@@ -135,5 +132,11 @@ public class MainFrame extends Application {
         ResponseEntity<String> response = restTemplate.exchange(URL, HttpMethod.GET, request, String.class);
         System.out.println(response.getStatusCode());
         System.out.println(response.getBody());
+        AlertBox alertBox = new AlertBox();
+        String solution = Objects.requireNonNull(
+                response.getBody())
+                    .replace(":[", ":\n[")
+                    .replace("],", "],\n");
+        alertBox.display("Solution", solution);
     }
 }
