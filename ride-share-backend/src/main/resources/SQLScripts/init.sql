@@ -110,7 +110,6 @@ begin
 		INSERT INTO bikes(in_maintenance, station_id, time_used_seconds)
 		VALUES(FALSE, v_station_id, 0);
 	END LOOP;
-	commit;
 end;$$
 
 create or replace procedure clear_tables()
@@ -127,6 +126,7 @@ begin
 	PERFORM setval(pg_get_serial_sequence('stations', 'id'), 1);
 end$$;
 
+DROP PROCEDURE init_tables(out placeholder int);
 
 create or replace procedure init_tables()
 language plpgsql
@@ -196,7 +196,7 @@ BEGIN
         random_between(200, 1400),
         random_between(166, 834),
         v_bike_capacity,
-        0,
+        v_bikes_stationed,
         v_optimal_bike_count,
 		FALSE);
 		call init_bikes(v_bikes_stationed, v_station_name);
@@ -226,24 +226,8 @@ BEGIN
         random_between(200, 1400),
         random_between(166, 834),
         v_bike_capacity,
-        0,
+        v_bikes_stationed,
         v_optimal_bike_count,
 		FALSE);
 		call init_bikes(v_bikes_stationed, v_station_name);
-		commit;
 END$$;
-
-/**
-do $$
-BEGIN
-	call init_tables();
-end$$;
-**/
-
-/**
-select * from stations;
-select * from routes;
-select * from bikes;
-select * from cars;
-select sum(bikes_stationed), sum(optimal_bike_count) from stations;
-**/
