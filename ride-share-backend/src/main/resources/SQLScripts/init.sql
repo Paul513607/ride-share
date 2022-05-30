@@ -145,7 +145,7 @@ DECLARE
 	v_station_id int;
 BEGIN
 	call clear_tables();
-	v_nr_of_stations := random_between(5, 20);
+	v_nr_of_stations := random_between(5, 8);
     raise notice 'Se insereaza % statii', v_nr_of_stations;
     v_bike_capacity := 0;
     v_total_bike_spaces := v_total_bike_spaces + v_bike_capacity;

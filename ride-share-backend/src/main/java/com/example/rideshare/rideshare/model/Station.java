@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 public class Station {
     @Id
     @Column(name = "ID", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "NAME", nullable = false, length = 50)

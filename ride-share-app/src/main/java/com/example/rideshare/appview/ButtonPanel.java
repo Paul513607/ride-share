@@ -29,6 +29,7 @@ public class ButtonPanel {
     private HBox buttonLayout;
 
     private List<PathTransition> animations = new ArrayList<>();
+    private int howMany;
 
     private boolean isStarted = false;
 
@@ -72,9 +73,9 @@ public class ButtonPanel {
                     circle.setFill(Color.WHITE);
                     circle.setStroke(Color.GREY);
                     // Get the next station
-                    Long id = random.nextLong(1, 7);
+                    Long id = random.nextLong(2, mainFrame.getDrawingPanel().getGraph().getNodes().size() + 1);
                     while (id.equals(node.getId())) {
-                        id = random.nextLong(1, 7);
+                        id = random.nextLong(2, mainFrame.getDrawingPanel().getGraph().getNodes().size() + 1);
                     }
                     Station nextNode = mainFrame.getDrawingPanel().getGraph().findStationById(id);
 
@@ -98,6 +99,8 @@ public class ButtonPanel {
             }
             mainFrame.getRoot().setCenter(mainFrame.getDrawingPanel().getDrawingLayout());
         } else {
+            howMany = mainFrame.getDrawingPanel().getGraph().getNodes().size() - 2;
+            mainFrame.printSolution();
             isStarted = false;
             for (PathTransition animation : animations) {
                 animation.stop();
@@ -111,16 +114,15 @@ public class ButtonPanel {
             ids.add(depot.getId());
 
             Random random = new Random();
-            int howMany = 3;
             Double[] points = new Double[howMany * 2 + 4];
             int index = 0;
             points[index] = depot.getX(); index++;
             points[index] = depot.getY(); index++;
 
             for (int count = 1; count <= howMany; count++) {
-                long id = random.nextLong(1, 7);
+                long id = random.nextLong(2, mainFrame.getDrawingPanel().getGraph().getNodes().size() + 1);
                 while (ids.contains(id)) {
-                    id = random.nextLong(1, 7);
+                    id = random.nextLong(2, mainFrame.getDrawingPanel().getGraph().getNodes().size() + 1);
                 }
                 ids.add(id);
                 Station nextNode = mainFrame.getDrawingPanel().getGraph().findStationById(id);

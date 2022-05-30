@@ -3,6 +3,8 @@ package com.example.rideshare.appview;
 import com.example.rideshare.model.Graph;
 import com.example.rideshare.model.Route;
 import com.example.rideshare.model.Station;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import javafx.animation.Animation;
 import javafx.animation.PathTransition;
@@ -17,7 +19,12 @@ import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import lombok.*;
+import org.springframework.http.*;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -55,14 +62,55 @@ public class MainFrame extends Application {
         root.setBottom(layoutBottom);
 
         Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
+        window.setOnCloseRequest(event -> {
+            System.out.println("Stage is closing");
+            // Save file
+        });
+
         window.setScene(scene);
         window.show();
     }
 
+    public List<Station> requestNodes() throws JsonProcessingException {
+        String URL = "http://localhost:8081/api/v1/stations/init";
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+
+        HttpEntity<String> request = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = restTemplate.postForEntity(URL, request, String.class);
+        System.out.println(response.getStatusCode());
+
+        String URL1 = "http://localhost:8081/api/v1/stations";
+        RestTemplate restTemplate1 = new RestTemplate();
+        HttpHeaders headers1 = new HttpHeaders();
+        headers1.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<String> request1 = new HttpEntity<>(headers1);
+
+        ResponseEntity<String> response1 = restTemplate1.exchange(URL1, HttpMethod.GET, request1, String.class);
+        System.out.println(response1.getStatusCode());
+        System.out.println(response1.getBody());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        return Arrays.asList(objectMapper.readValue(response1.getBody(), Station[].class));
+    }
+
     public Graph generateGraph() {
+        List<Station> stationList = new ArrayList<>();
+        try {
+            stationList = requestNodes();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
         Graph graph = new Graph();
 
-        Random random = new Random();
+        for (Station station : stationList) {
+            graph.addNode(station);
+        }
+
+        /*Random random = new Random();
         Faker faker = new Faker();
         for (int count = 1; count <= 6; ++count) {
             graph.addNode(new Station((long) count, faker.name().name(),
@@ -70,8 +118,22 @@ public class MainFrame extends Application {
                     random.nextDouble(WINDOW_HEIGHT / 6, WINDOW_HEIGHT - WINDOW_HEIGHT / 6),
                     0L, random.nextLong(1, 6), 0L, false));
         }
-        graph.getNodes().stream().toList().get(1).setDepo(true);
+        graph.getNodes().stream().toList().get(1).setDepo(true);*/
 
         return graph;
+    }
+
+    public void printSolution() {
+        String URL = "http://localhost:8081/api/v1/stations/path";
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<String> request = new HttpEntity<>(headers);
+
+        System.out.println("\n\n\nSolution:");
+        ResponseEntity<String> response = restTemplate.exchange(URL, HttpMethod.GET, request, String.class);
+        System.out.println(response.getStatusCode());
+        System.out.println(response.getBody());
     }
 }
