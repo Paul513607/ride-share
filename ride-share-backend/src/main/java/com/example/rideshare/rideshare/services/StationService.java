@@ -1,5 +1,9 @@
 package com.example.rideshare.rideshare.services;
 
+import com.example.rideshare.rideshare.algo.graph.Graph;
+import com.example.rideshare.rideshare.algo.models.AlgStation;
+import com.example.rideshare.rideshare.algo.models.Solution;
+import com.example.rideshare.rideshare.algo.solver.GreedySBRPSolver;
 import com.example.rideshare.rideshare.customexceptions.StationNotFoundException;
 import com.example.rideshare.rideshare.dtos.StationDto;
 import com.example.rideshare.rideshare.model.Station;
@@ -8,7 +12,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -20,6 +26,9 @@ public class StationService {
 
     @Autowired
     private ModelMapper mapper;
+
+    @Autowired
+    private CarService carService;
 
     public List<StationDto> getAllStations() {
         return stationRepo.findAll().stream()
@@ -81,5 +90,45 @@ public class StationService {
         }
 
         stationRepo.delete(station.get());
+    }
+
+    public void initProblem(){
+        stationRepo.initProblem();
+    }
+
+    public Solution getTruckRoute(){
+        var allStations = getAllStations();
+        Map<Integer,Long> dataBaseAlgIdMapping = new HashMap<>();
+        Graph<AlgStation> graph = new Graph<>(allStations.size());
+
+        for (int index = 0; index < allStations.size(); index++) {
+            dataBaseAlgIdMapping.put(index, allStations.get(index).getId());
+            var stationDto = allStations.get(index);
+            AlgStation station = new AlgStation(
+                    stationDto.getName(),
+                    stationDto.getCoordinatesX().doubleValue(),
+                    stationDto.getCoordinatesY().doubleValue(),
+                    (int)stationDto.getTotalBikeCapacity().longValue(),
+                    (int)stationDto.getBikesStationed().longValue(),
+                    (int)stationDto.getOptimalBikeCount().longValue());
+            graph.getVerticesMap().put(index, station);
+        }
+
+        for (int start = 0; start < allStations.size() - 1; start++) {
+            for (int end = start + 1; end < allStations.size(); end++) {
+                graph.setUndirectedEdge(start, end, AlgStation.getDistance(graph.getVerticesMap().get(start), graph.getVerticesMap().get(end)));
+            }
+        }
+
+        var car = carService.getAllCars().get(0);
+
+        GreedySBRPSolver solver = new GreedySBRPSolver(graph, (int)car.getTotalCapacity().longValue());
+        Solution solution = solver.getTruckRoute();
+        var routes = solution.getRoutes();
+        for (int index = 0; index < routes.size(); index++) {
+            routes.set(index, (int)dataBaseAlgIdMapping.get(routes.get(index)).longValue());
+        }
+
+        return solution;
     }
 }

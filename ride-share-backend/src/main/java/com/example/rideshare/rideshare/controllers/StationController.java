@@ -1,5 +1,6 @@
 package com.example.rideshare.rideshare.controllers;
 
+import com.example.rideshare.rideshare.algo.models.Solution;
 import com.example.rideshare.rideshare.dtos.StationDto;
 import com.example.rideshare.rideshare.services.StationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,4 +43,17 @@ public class StationController {
         stationService.deleteStation(id);
         return new ResponseEntity<>(new HttpHeaders(), HttpStatus.RESET_CONTENT);
     }
+
+    @PostMapping("/init")
+    public ResponseEntity<?> createInstance() {
+        stationService.initProblem();
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping("/path")
+    public ResponseEntity<Solution> getSolution(){
+        Solution sol = stationService.getTruckRoute();
+        return ResponseEntity.ok().body(sol);
+    }
+
 }

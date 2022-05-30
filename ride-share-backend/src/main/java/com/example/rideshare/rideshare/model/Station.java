@@ -4,15 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "STATIONS")
 @Data
+@NamedStoredProcedureQuery(name = "Station.initProblem",procedureName = "INIT_TABLES", parameters = {
+        @StoredProcedureParameter(mode = ParameterMode.OUT, name = "placeholder", type = Integer.class)
+})
 @NoArgsConstructor
 @AllArgsConstructor
 public class Station {
